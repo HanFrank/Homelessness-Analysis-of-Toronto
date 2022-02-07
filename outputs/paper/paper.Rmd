@@ -1,13 +1,14 @@
 ---
-title: "Accessment of Homelessness in Toronto in regards to COVID-19 and other factors"
+title: "An Analysis of Homelessness in Toronto in regards to COVID-19 and other factors"
 subtitle: "Data from January 2020 to December 2021"
 author: "Ziyao Han"
 thanks: "Code and data are available at: https://github.com/HanFrank/STA304-Paper-1"
 date: "February 6, 2022"
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
 output: 
-  bookdown::pdf_document2
-toc: FALSE
+  bookdown::pdf_document2:
+    extra_dependencies: ["float"]
+toc: TRUE
 bibliography: references.bib
 ---
 
@@ -31,12 +32,17 @@ monthly_shelter_usage <- monthly_shelter_usage[-c(1)]
 # Introduction
 
 First Paragraph is going to be motivational and broad.
+importance of homelessness shelters for a city
 
 Second Paragraph is about what was done and what was found.
 
-Third paragraph is about implications.
 
-Final Paragraph about the remainder of the paper.
+Third paragraph is about implications.
+covid19 has changed the way the world works
+- social distancing
+- mask requirements
+- vaccines
+
 
 The statistical analysis in this report will be done using `R` [@citeR]. The R Packages, `tidyverse` [@citetidy] and `dplyr` [@citedplyr] will be used for data manipulation and cleaning. The graphs and tables for this report will created and formatted with `ggplot2` [@citeggplot] and `kableExtra` [@citekable]. The packages `bookdown` [@citebookdown] and `knitr` [@citeknitr] will be used to format this report.
 
@@ -83,25 +89,91 @@ As seen, since the cleaned dataset uses the date format, 2020-01-01 represents J
 
 # Data Accessment and Discussion
 
-## Covid-19 and its effects on homelessness shelter {#covid}
+## Covid-19 and its effects on homelessness shelter usage {#covid}
 
 ```{r graph1, fig.cap="Active number of homeless over time", echo=FALSE, fig.height=4, fig.width=6}
 # Creating subset of only total population
-population_plot <- monthly_shelter_usage[monthly_shelter_usage$population_group == "All Population",]
+total_population <- monthly_shelter_usage[monthly_shelter_usage$population_group == "All Population",]
 # Plotting total usage of homeless shelter over time and overlaying start of covid
-population_plot %>%
-  ggplot(aes(x = date, y = actively_homeless)) +
-  labs(x = "Date", y = "Actively Homeless", title =  "Usage of Homeless shelters dropping due to Covid-19") +
-  geom_line() +
-  geom_line(aes(x=as.Date("2020-03-01")), linetype="dotted", col = "red") + # Drawing dotted red line for covid
-  theme_minimal()
+ggplot(total_population, aes(x = date, y = actively_homeless)) +
+geom_line() +
+# Drawing dotted red line for covid
+geom_line(aes(x=as.Date("2020-03-01"), col = "COVID-19 response begins in Toronto"), linetype="dotted") + 
+labs(x = "Date", 
+     y = "Actively Homeless", 
+     title =  "Usage of Homeless shelters dropping due to COVID-19",
+     col = "Event: ") +
+theme_minimal() +
+theme(legend.position = "bottom")
+```
+
+Stuff about this graph
+
+### Chronic shelter usage is stable
+
+```{r graph2, fig.cap="Active number of homeless over time for each population group", echo=FALSE}
+ggplot(monthly_shelter_usage, mapping = aes(x = date, y = actively_homeless, colour = population_group)) +
+geom_line() +
+labs(x = "Date", 
+     y = "Actively Homeless", 
+     title =  "Chronic shelter usage remains stable through COVID-19",
+     caption = "Began tracking Indigenous numbers in Jan 2021",) +
+theme_minimal()
 ```
 
 ## Gender demographics
 
-## Age demographics
+```{r gendertable, echo = FALSE, fig.cap="Active Homeless by Gender"}
+# Creating empty tibble for gender
+gender_table <- tibble("Gender" = character(),
+                       "Total" = numeric(),
+                       "Percentage" = numeric())
 
-## Areas of further exploration
+# Populating dataframe
+gender_table <- add_row(gender_table, 
+                        Gender = "Male", 
+                        Total = sum(total_population$gender_male), 
+                        Percentage = round(sum(total_population$gender_male) / sum(total_population$actively_homeless) * 100, digits = 1))
+
+
+gender_table <- add_row(gender_table, 
+                        Gender = "Female", 
+                        Total = sum(total_population$gender_female),
+                        Percentage = round(sum(total_population$gender_female) / sum(total_population$actively_homeless) * 100, digits = 1))
+
+
+gender_table <- add_row(gender_table,
+                        Gender = "Transgender, Non-binary or Two-spirit", 
+                        Total = sum(total_population$`gender_transgender,non-binary_or_two_spirit`), 
+                        Percentage = round(sum(total_population$`gender_transgender,non-binary_or_two_spirit`) / sum(total_population$actively_homeless) * 100, digits = 1))
+
+# Creating kable
+gender_table %>% 
+  kable(
+    caption = "Table of shelter usage by gender",
+    digits = 1,
+    booktabs = TRUE,
+    linesep=" ",
+  ) %>% 
+    add_footnote("Percentage ± 0.1", notation = "number") # Adding rounding error
+```
+## Movement to Permanant
+
+```{r, fig.cap="Movement between Permanant housing", echo=FALSE}
+ggplot(total_population, aes(x = date)) +
+geom_line(aes(y = moved_to_housing, col = "Moved")) +
+geom_line(aes(y = returned_from_housing, col = "Returned")) + 
+# Drawing dotted red line for covid
+labs(x = "Date", 
+     y = "# of people", 
+     title =  "People moving to permanant housing dropping significantly",
+     col = "Action: ") +
+theme_minimal() +
+theme(legend.position = "bottom")
+```
+
+
+## Areas of potential further exploration
 
 Weaknesses and next steps should also be included.
 
