@@ -31,8 +31,8 @@ monthly_shelter_usage_raw <-
 write.csv(monthly_shelter_usage_raw, "inputs/data/shelter_flow_raw_data.csv")
 
 #### Data Cleaning ####
-# Removing index and ID
-clean_data <- monthly_shelter_usage_raw[-c(1, 2)]
+# Removing ID
+clean_data <- monthly_shelter_usage_raw[-c(1)]
 
 # Removing age demographic variables
 clean_data <- clean_data[-c(9:13)]
