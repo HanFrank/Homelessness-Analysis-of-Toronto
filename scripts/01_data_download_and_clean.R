@@ -37,6 +37,17 @@ clean_data <- monthly_shelter_usage_raw[-c(1)]
 # Removing age demographic variables
 clean_data <- clean_data[-c(9:13)]
 
+# Renaming Date
+names(clean_data)[1] <- "date"
+
+# Converting mmm-yy character into date format
+# Referenced https://community.rstudio.com/t/converting-a-yy-mm-character-into-date-format/30274
+clean_data <- within(data = clean_data,
+                   expr = {
+                     date = as.Date(x = paste0("01-", date),
+                                    format = "%d-%b-%y")
+                   })
+
 #### Save Data ####
 write.csv(clean_data, "inputs/data/shelter_flow_data.csv")
          

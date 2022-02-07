@@ -40,7 +40,7 @@ Final Paragraph about the remainder of the paper.
 
 The statistical analysis in this report will be done using `R` [@citeR]. The R Packages, `tidyverse` [@citetidy] and `dplyr` [@citedplyr] will be used for data manipulation and cleaning. The graphs and tables for this report will created and formatted with `ggplot2` [@citeggplot] and `kableExtra` [@citekable]. The packages `bookdown` [@citebookdown] and `knitr` [@citeknitr] will be used to format this report.
 
-
+\newpage
 
 # Data
 
@@ -61,42 +61,47 @@ There is a variety of reasons a person experiencing homelessness will not seek h
 
 ## Data Characteristics
 
-The original dataset contained 180 observations with 19 variables. These 180 observations are comprised of 7 categorical entries per month for 24 months (168 observations), and starting from January 2021, an additional entry was added for peoples identifying as Indigenous for a additional 12 observations (totaling 180).
+The original dataset contained 180 observations with 18 variables. These 180 observations are comprised of 7 categorical entries per month for 24 months (168 observations) and starting from January 2021, an additional entry was added per month for peoples identifying as Indigenous for an additional 12 observations (totaling 180). For the data cleaning process, variables that are outside of the scope of the report were removed as well as variables that had no potential usage for analysis. The id variable variable was removed due to no potential usage and the 5 age demographic variables were removed because they were outside of the scope for this report and I felt that the Youth categorical observations serve a similar but better statistical purpose. Lastly, I converted the date variable from an (mmm-yy) character into a date format for easier data manipulation and graph creation. This was done using code referenced from [@citeyarna] in the RStudio Community forum. 
 
-Here is an extract of the dataset with a couple of variables of interest (Table \@ref(tab:extract)).
+Here is an extract of the dataset from January 2020, with a few sample of variables of interest (Table \@ref(tab:extract)).
 
 ```{r extract, echo = FALSE, warning = FALSE, message = FALSE}
+# Showing an extract of the total dataset as a sample
 monthly_shelter_usage %>%
-  select(`date(mmm-yy)`, population_group, actively_homeless, population_group_percentage) %>%
+  select(date, population_group, actively_homeless, population_group_percentage) %>%
   slice(1:7) %>%
   kable(
-    caption = "First ten rows of a dataset",
-    col.names = c("Date (Month, Year)", "Population Group", "Actively Homeless", "Percentage of Group Population"),
+    caption = "Extract from full dataset, January 2020",
+    col.names = c("Date", "Population Group", "Actively Homeless", "Percentage of Group Population"),
     digits = 1,
     booktabs = TRUE,
     linesep=""
   )
 ```
 
-Paragraph or two more about it
+As seen, since the cleaned dataset uses the date format, 2020-01-01 represents January, 2020. Moreover, for example, 2021-08-01 would represents August, 2021.
 
-Also bills and their average (Figure \@ref(fig:billssssss)). (Notice how you can change the height and width so they don't take the whole page?)
-
-```{r billssssss, fig.cap="More bills of penguins", echo = FALSE, fig.width=8, fig.height=4}
-# This needs to be about the random data that I sampled?
-```
-
-Talk way more about it. 
-
-# Discussion
+# Data Accessment and Discussion
 
 ## Covid-19 and its effects on homelessness shelter {#covid}
+
+```{r graph1, fig.cap="Active number of homeless over time", echo=FALSE, fig.height=4, fig.width=6}
+# Creating subset of only total population
+population_plot <- monthly_shelter_usage[monthly_shelter_usage$population_group == "All Population",]
+# Plotting total usage of homeless shelter over time and overlaying start of covid
+population_plot %>%
+  ggplot(aes(x = date, y = actively_homeless)) +
+  labs(x = "Date", y = "Actively Homeless", title =  "Usage of Homeless shelters dropping due to Covid-19") +
+  geom_line() +
+  geom_line(aes(x=as.Date("2020-03-01")), linetype="dotted", col = "red") + # Drawing dotted red line for covid
+  theme_minimal()
+```
 
 ## Gender demographics
 
 ## Age demographics
 
-## Weaknesses and next steps
+## Areas of further exploration
 
 Weaknesses and next steps should also be included.
 
@@ -105,5 +110,10 @@ Weaknesses and next steps should also be included.
 \newpage
 
 # References
+
+Articles that need to be used and referenced in discussion
+https://toronto.citynews.ca/2021/03/11/timeline-a-year-of-pandemic-life/
+https://www.facetsjournal.com/doi/10.1139/facets-2021-0004
+https://www.cbc.ca/news/canada/toronto/toronto-shelters-in-outbreak-unhoused-people-one-death-covid-19-1.6003201
 
 
