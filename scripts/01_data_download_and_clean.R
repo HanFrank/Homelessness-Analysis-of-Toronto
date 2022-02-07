@@ -23,11 +23,20 @@ library(opendatatoronto)
 resources <- list_package_resources("ac77f532-f18b-427c-905c-4ae87ce69c93")
 
 # loading data from resource
-monthly_shelter_usage <-
+monthly_shelter_usage_raw <-
   resources %>%
   get_resource()
 
+# Saving raw data for reproducibility
+write.csv(monthly_shelter_usage_raw, "inputs/data/shelter_flow_raw_data.csv")
+
+#### Data Cleaning ####
+# Removing index and ID
+clean_data <- monthly_shelter_usage_raw[-c(1, 2)]
+
+# Removing age demographic variables
+clean_data <- clean_data[-c(9:13)]
 
 #### Save Data ####
-write.csv(monthly_shelter_usage, "inputs/data/filler_data.csv")
+write.csv(clean_data, "inputs/data/shelter_flow_data.csv")
          
