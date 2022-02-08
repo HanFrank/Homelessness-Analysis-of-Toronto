@@ -1,13 +1,12 @@
 ---
 title: "An Analysis of Homelessness in Toronto in regards to COVID-19 and other factors"
-subtitle: "Data from January 2020 to December 2021"
+subtitle: "Statisical analysis from January 2020 to December 2021"
 author: "Ziyao Han"
-thanks: "Code and data are available at: https://github.com/HanFrank/STA304-Paper-1"
+thanks: "Code and data are available at: https://github.com/HanFrank/Homelessness-Analysis-of-Toronto"
 date: "February 6, 2022"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "A well functioning shelter system and its accompanying services should be an essential part of the nervous system of a well-run city. This report uses data collected from Open Data Toronto and applies statistical visualization, past and present literature to analyse the homelessness situation in Toronto. The data shows that COVID-19 has had a significant impact on shelter usage and is a predominant factor in shelter usage and the homelessness situation in Toronto within the last two years. This report uses a range of data to analyse the shelter system to provide insight into the ongoing fight against homelessness."
 output: 
-  bookdown::pdf_document2:
-    extra_dependencies: ["float"]
+  bookdown::pdf_document2
 toc: TRUE
 bibliography: references.bib
 ---
@@ -31,47 +30,38 @@ monthly_shelter_usage <- monthly_shelter_usage[-c(1)]
 
 # Introduction
 
-First Paragraph is going to be motivational and broad.
-importance of homelessness shelters for a city
+A well functioning shelter system and its accompanying services should be an essential part of the nervous system of a well-run city. The availability of Homelessness services should provide for someone in their time of greatest need. A homeless shelter and its accompanying services should be a city's safety net that catches its citizens and helps elevate them back to a healthy position within society. 
 
-Second Paragraph is about what was done and what was found.
+In this report, I will be using a dataset from Toronto's Open Data Portal to analyse Toronto's Shelter System through statistical visualizations and past and existing literature on the topic of homelessness and shelter usage. From this data, I found both concerning and promising characteristics to the health of the system's homelessness situation. 
 
-
-Third paragraph is about implications.
-covid19 has changed the way the world works
-- social distancing
-- mask requirements
-- vaccines
-
+A predominant feature in the data and the overall world surrounding it was the COVID-19 pandemic. The story of the flow of shelter usage in Toronto within the 2020-2022 period is fundamentally tied to the story of the pandemic within the city and was impossible to ignore. Many of the characteristics and behaviours of the data correspond closely with COVID-19 and the city's response to it. Thus, a significant portion of the discussion in this paper will be discussing COVID-19 and its impacts on the shelter system through data visualizations.
 
 The statistical analysis in this report will be done using `R` [@citeR]. The R Packages, `tidyverse` [@citetidy] and `dplyr` [@citedplyr] will be used for data manipulation and cleaning. The graphs and tables for this report will created and formatted with `ggplot2` [@citeggplot] and `kableExtra` [@citekable]. The packages `bookdown` [@citebookdown] and `knitr` [@citeknitr] will be used to format this report.
-
-\newpage
 
 # Data
 
 ## Data Source
 
-The data that was used for this report was obtained and gathered by the Shelter, Support & Housing Administration (SSHA) of the City of Toronto [@citedata]. This data is collected through the City of Toronto funded homelessness shelters and services. This data shares information about the people accessing the services and is meant to provide insight regarding homelessness in Toronto with the vision of reducing homelessness in the city. This dataset is openly available to the public through the City of Toronto's Open Data Portal on an Open Government License - Toronto and was accessed through R using the R package `opendatatoronto` [@citeodt]. This dataset contains data from January 2020 to December 2021 and was last updated on January 7th, 2022. 
+The data that was used for this report was obtained and gathered by the Shelter, Support & Housing Administration (SSHA) of the City of Toronto [@citedata]. This data is collected through the city-funded homelessness shelters and services. This data shares information about the people accessing the services and is meant to provide insight regarding homelessness in Toronto with the vision of reducing homelessness in the city. This dataset is openly available to the public through the City of Toronto's Open Data Portal on an Open Government License - Toronto and was accessed through R using the R package `opendatatoronto` [@citeodt]. This dataset contains data from January 2020 to December 2021 and was last updated on January 7th, 2022. 
 
 
 ## Methodology and Data Collection
 
-The Shelter, Support & Housing Administration Division of the City of Toronto is the governmental service operator and manager of housing and homelessness services in Toronto. They offer services such as emergency shelters, street outreach, short-term respites and housing stability services such as drop-ins and eviction prevention [@citeshelter]. The Shelter System Flow data records the number of unique people who are entering and leaving the shelter system each month. In the data, the number of actively homeless is determined as the number people whom have used the shelter services within the past three months.
+The Shelter, Support & Housing Administration Division of the City of Toronto is the governmental service operator and manager of housing and homelessness services in Toronto. They offer services such as emergency shelters, street outreach, short-term respites and housing stability services such as drop-ins and eviction prevention [@citeshelter]. The Shelter System Flow data records the number of unique people who are entering and leaving the shelter system each month. In the data, the number of actively homeless is determined as the number of people who have used the shelter services within the past three months.
 
 ## Data Limitations
 
 Since the data is collected from people accessing the homelessness services operated or managed by the City of Toronto, this data does not contain people who have been used these services such as people sleeping exclusively outdoors or using other homelessness services that are not using the Shelter Management Information System (SMIS). According to the dataset, based on a recent Street Needs Assessment (A city-wide count and survey of people experiencing homelessness in Toronto [@citesna]), there is an anticipated 18 per cent of people experiencing homelessness in Toronto that is not reflected in this dataset [@citedata].
 
-There is a variety of reasons a person experiencing homelessness will not seek help from a shelter system. Example of this could be to avoid shelter restrictions such as curfews. Another potential reason, especially during the Covid-19 pandemic, is public health concerns [@citepallet]. This specific topic will be discussed further in section \@ref(covid).
+There is a variety of reasons a person experiencing homelessness will not seek help from a shelter system. An example of this could be to avoid shelter restrictions such as curfews. Another potential reason, especially during the Covid-19 pandemic, is public health concerns [@citepallet]. This specific topic will be discussed further in section \@ref(covid).
 
 ## Data Characteristics
 
-The original dataset contained 180 observations with 18 variables. These 180 observations are comprised of 7 categorical entries per month for 24 months (168 observations) and starting from January 2021, an additional entry was added per month for peoples identifying as Indigenous for an additional 12 observations (totaling 180). For the data cleaning process, variables that are outside of the scope of the report were removed as well as variables that had no potential usage for analysis. The id variable variable was removed due to no potential usage and the 5 age demographic variables were removed because they were outside of the scope for this report and I felt that the Youth categorical observations serve a similar but better statistical purpose. Lastly, I converted the date variable from an (mmm-yy) character into a date format for easier data manipulation and graph creation. This was done using code referenced from [@citeyarna] in the RStudio Community forum. 
+The original dataset contained 180 observations with 18 variables. These 180 observations are comprised of 7 categorical entries per month for 24 months (168 observations) and starting from January 2021, an additional entry was added per month for peoples identifying as Indigenous for an additional 12 observations (totalling 180). For the data cleaning process, variables that are outside of the scope of the report were removed as well as variables that had no potential usage for analysis. The id variable was removed due to no potential usage and the 5 age demographic variables were removed because they were outside of the scope for this report and I felt that the Youth categorical observations serve a similar but better statistical purpose. Lastly, I converted the date variable from an (mmm-yy) character into a date format for easier data manipulation and graph creation. This was done using code referenced from [@citeyarna] in the RStudio Community forum. 
 
-Here is an extract of the dataset from January 2020, with a few sample of variables of interest (Table \@ref(tab:extract)).
+Table \@ref(tab:extract) is an extract of the dataset from January 2020, with a few samples of variables of interest. To be noted, since the cleaned dataset uses the date format, 2020-01-01 represents January 2020. Moreover, for example, 2021-08-01 would represent August 2021.
 
-```{r extract, echo = FALSE, warning = FALSE, message = FALSE}
+```{r extract, echo = FALSE, warning = FALSE, message = FALSE, fig.align="center"}
 # Showing an extract of the total dataset as a sample
 monthly_shelter_usage %>%
   select(date, population_group, actively_homeless, population_group_percentage) %>%
@@ -85,11 +75,11 @@ monthly_shelter_usage %>%
   )
 ```
 
-As seen, since the cleaned dataset uses the date format, 2020-01-01 represents January, 2020. Moreover, for example, 2021-08-01 would represents August, 2021.
-
 # Data Accessment and Discussion
 
 ## Covid-19 and its effects on homelessness shelter usage {#covid}
+
+Figure \@ref(fig:graph1) shows the total number of people that are actively accessing homelessness services over the course of the two year period between January 2020 and December 2021. The red dotted line in the figure represents March 2020 the beginning of the COVID-19 response in Toronto and in much of the world [@citetimeline]. 
 
 ```{r graph1, fig.cap="Active number of homeless over time", echo=FALSE, fig.height=4, fig.width=6}
 # Creating subset of only total population
@@ -107,11 +97,15 @@ theme_minimal() +
 theme(legend.position = "bottom")
 ```
 
-Stuff about this graph
+Figure \@ref(fig:graph1) shows a massive reduction in shelter usage right after the beginning of COVID-19 in Toronto. This is likely due to public health concerns regarding going to homeless shelters due to the lack of ability to socially distance, maintain hygiene, or isolate [@citefacets]. Additionally, shelter space is further limited due to shelter capacities and distancing guidelines. In the warmer months, much of the reduced shelter usage can be explained by people sleeping outdoors in order to avoid public shelters. However, in the winter months, shelter usage begins to rise as seen in the winter months of 2020-2021 [@citewinter]. 
+
+Starting in around April 2021, shelter usage begins to significantly increase to almost pre-pandemic levels. This corresponds exactly to the increase in vaccination rates in Ontario and the easing of lockdown restrictions by the Government of Ontario. However, as seen at the end of the graph, in December 2021, the increase begins to flatten, likely due to the emergence of the Omicron variant of the Coronavirus and reintroduction of lockdown procedures in Ontario.
 
 ### Chronic shelter usage is stable
 
-```{r graph2, fig.cap="Active number of homeless over time for each population group", echo=FALSE}
+Figure \@ref(fig:graph2) shows the active number of homeless people in each population group of the dataset. Almost all population groups share a similar behaviour, with one notable exception, the chronic homeless population group.
+
+```{r graph2, fig.cap="Active number of homeless over time for each population group",fig.height=4, echo=FALSE}
 ggplot(monthly_shelter_usage, mapping = aes(x = date, y = actively_homeless, colour = population_group)) +
 geom_line() +
 labs(x = "Date", 
@@ -121,9 +115,13 @@ labs(x = "Date",
 theme_minimal()
 ```
 
+In Figure \@ref(fig:graph2), all population groups show a significant drop in usage with the emergence of the Coronavirus in March 2020, except for the chronic population group. Furthermore, from the Figure, the population group seems to steady increase consistently throughout the given time period. This is because chronic users of homelessness services rely upon these services for mental, physical or health related reasons and are unable to leave the system [@citehomelesshub]. I speculate the increase in this population group is likely due to the health and economic issues caused by the COVID-19 pandemic.
+
 ## Gender demographics
 
-```{r gendertable, echo = FALSE, fig.cap="Active Homeless by Gender"}
+Table \@ref(tab:gendertable) was created from the gender data provided in the main dataset about the usage of the shelter system. Based on the three sampled gender categories, the population numbers were totalled into the table for easy visualization.
+
+```{r gendertable, echo = FALSE, fig.cap="Active Homeless by Gender", fig.align='center'}
 # Creating empty tibble for gender
 gender_table <- tibble("Gender" = character(),
                        "Total" = numeric(),
@@ -157,35 +155,43 @@ gender_table %>%
   ) %>% 
     add_footnote("Percentage ± 0.1", notation = "number") # Adding rounding error
 ```
-## Movement to Permanant
 
-```{r, fig.cap="Movement between Permanant housing", echo=FALSE}
+From initial inspection of Table \@ref(tab:gendertable), we can notice a significant disparity between the percentage of Male and Female shelter usage. However, this appears to be the norm, and actually on the higher end of Female representation. According to data from the United States in 2018, on average 70% of individuals experiencing homelessness are Men followed by 29% by Women and 1% for Transgender and Non-binary individuals [@citegenderdisparity]. If Toronto was an American State, it would rank in the top 5 of highest ratios of Female representation. 
+
+Low female representation in homelessness numbers could be due to a variety of factors. Women and children are often especially concerned about conflict and abuse due to the public nature of homeless shelters. This would be of even greater concern for victims of sexual abuse that are seeking refuge or are temporarily homeless, may intentionally avoid homelessness shelters or services [@citepallet]. This is an extremely expansive topic that could be an area of further exploration as discussed in section \@ref(further).
+
+## Movement between Permanant Housing
+
+Figure \@ref(fig:graph3) shows the number of people moving to and from permanent housing during the two year period. The red line indicates the number people leaving the shelter system by obtaining permanent housing and the blue line represents the number of people reentering the shelter system after moving to permanent housing. 
+
+```{r graph3, fig.cap="Movement between Permanent housing", echo=FALSE, fig.height=4, fig.width=6}
 ggplot(total_population, aes(x = date)) +
 geom_line(aes(y = moved_to_housing, col = "Moved")) +
 geom_line(aes(y = returned_from_housing, col = "Returned")) + 
 # Drawing dotted red line for covid
 labs(x = "Date", 
      y = "# of people", 
-     title =  "People moving to permanant housing dropping significantly",
+     title =  "People moving to permanent housing dropping significantly",
      col = "Action: ") +
 theme_minimal() +
 theme(legend.position = "bottom")
 ```
 
+The trend noticeable in Figure \@ref(fig:graph3) is quite concerning. The number of people moving to permanent housing is rapidly decreasing as a function of time. The initial drop due to COVID-19 is understandable. However, unlike shelter usage numbers, the moved to housing number does not appear to be recovering. This is compounded by the behaviour of the returned from housing number. It appears that a consistent number of people are losing permanent housing while the moved to housing number continues to drop. Ideally, to reduce homelessness in a city, the red line should be positive while the blue line should be negative. I think this is a great visualization of the true trend of homelessness in Toronto within the last two years.
 
-## Areas of potential further exploration
+## Areas of potential further exploration {#further}
 
-Weaknesses and next steps should also be included.
+Given the amount of information provided in this dataset, there are many routes of further exploration beyond this report. For example, maybe something could be concluding out of the newly_identified variable. This variable identifies people who have entered the shelter system for the first time. This could be a fascinating exploration into the contextual reasoning of people entering the shelter system. 
+
+Furthermore, so much work can be done and has been done beyond the scope of this report, such as data extrapolation or expansion of the dataset to other cities or regions. There is so much exploration in the topic of homelessness that is available and this report simply scratches the surface.
 
 # Conclusion
+
+From this analysis, we can see that COVID-19 has had a significant impact on the homelessness situation in Toronto. Due to the necessity to physically distance combined with public health concerns, shelter usage dropped significantly following the emergence of COVID-19 but has shown steady recovery. However, what is of further concern, is the housing situation in Toronto. From the data and Figure \@ref(fig:graph3) we can see that homelessness is still a huge problem in Toronto and the reduction in shelter usage is less likely due to people obtaining homes and more likely due to people sleeping on the streets for fear of COVID-19. 
+
+On a positive note, gender demographics show that Toronto's homelessness population has a relatively higher than normal representation of Women and people identifying as Transgender, Non-binary, or Two-spirited. This could be a positive marker for the environment and perception of homeless shelters and services in Toronto. 
 
 \newpage
 
 # References
-
-Articles that need to be used and referenced in discussion
-https://toronto.citynews.ca/2021/03/11/timeline-a-year-of-pandemic-life/
-https://www.facetsjournal.com/doi/10.1139/facets-2021-0004
-https://www.cbc.ca/news/canada/toronto/toronto-shelters-in-outbreak-unhoused-people-one-death-covid-19-1.6003201
-
 
